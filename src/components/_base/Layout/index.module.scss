@@ -1,0 +1,28 @@
+.wrapper {
+  width: 100vw;
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: 100%;
+
+  .headerWrapper {
+    position: fixed;
+    width: 100%;
+    height: $header_height;
+
+    .header {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .main {
+    margin-top: $header_height;
+  }
+
+  .footerWrapper {
+    height: 150px;
+  }
+}
