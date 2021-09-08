@@ -13,8 +13,8 @@ export default function Layout({ children }) {
           </div>
           <div></div>
           <div>
-            <Link href="/sign-in">sign in</Link>
-            <Link href="/sign-up">sign up</Link>
+            <Link href="/signin">sign in</Link>
+            <Link href="/signup">sign up</Link>
           </div>
         </div>
       </header>

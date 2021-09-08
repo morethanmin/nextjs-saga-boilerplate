@@ -1,9 +1,9 @@
 import { all } from '@redux-saga/core/effects'
 import { combineReducers } from 'redux'
-import auth, { authSaga } from './auth'
+import user, { userSaga } from './user'
 
 export function* rootSaga() {
-  yield all([authSaga()])
+  yield all([userSaga()])
 }
 
-export default combineReducers({ auth })
+export default combineReducers({ user })

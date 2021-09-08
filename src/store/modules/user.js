@@ -1,4 +1,4 @@
-import * as authAPI from 'lib/api/auth'
+import * as userAPI from 'lib/api/user'
 
 import {
   call,
@@ -8,16 +8,25 @@ import {
   takeLeading,
 } from '@redux-saga/core/effects'
 
-const SIGN_IN = 'auth/SIGN_IN'
-const SIGN_IN_SUCCESS = 'auth/SIGN_IN_SUCCESS'
-const SIGN_IN_ERROR = 'auth/SIGN_IN_ERROR'
+const SIGN_IN = 'user/SIGN_IN'
+const SIGN_IN_SUCCESS = 'user/SIGN_IN_SUCCESS'
+const SIGN_IN_ERROR = 'user/SIGN_IN_ERROR'
 
-const SIGN_OUT = 'auth/SIGN_OUT'
-const SIGN_OUT_SUCCESS = 'auth/SIGN_OUT_SUCCESS'
-const SIGN_OUT_ERROR = 'auth/SIGN_OUT_ERROR'
+const SIGN_UP = 'user/SIGN_UP'
+const SIGN_UP_SUCCESS = 'user/SIGN_UP_SUCCESS'
+const SIGN_UP_ERROR = 'user/SIGN_UP_ERROR'
+
+const SIGN_OUT = 'user/SIGN_OUT'
+const SIGN_OUT_SUCCESS = 'user/SIGN_OUT_SUCCESS'
+const SIGN_OUT_ERROR = 'user/SIGN_OUT_ERROR'
 
 export const signIn = (payload, successCallback = () => {}) => ({
   type: SIGN_IN,
+  payload,
+  successCallback,
+})
+export const signUp = (payload, successCallback = () => {}) => ({
+  type: SIGN_UP,
   payload,
   successCallback,
 })
@@ -28,11 +37,20 @@ export const signOut = (successCallback) => ({
 
 const signInSaga = function* (action) {
   try {
-    const payload = yield call(authAPI.signIn, action.payload)
+    const payload = yield call(userAPI.signIn, action.payload)
     yield put({ type: SIGN_IN_SUCCESS, payload })
     yield call(action.successCallback)
   } catch (error) {
     yield put({ type: SIGN_IN_ERROR, payload: error })
+  }
+}
+const signUpSaga = function* (action) {
+  try {
+    const payload = yield call(userAPI.signUp, action.payload)
+    yield put({ type: SIGN_UP_SUCCESS, payload })
+    yield call(action.successCallback)
+  } catch (error) {
+    yield put({ type: SIGN_UP_ERROR, payload: error })
   }
 }
 const signOutSaga = function* (action) {
@@ -44,20 +62,29 @@ const signOutSaga = function* (action) {
   }
 }
 
-export function* authSaga() {
+export function* userSaga() {
   yield takeEvery(SIGN_IN, signInSaga)
+  yield takeEvery(SIGN_UP, signUpSaga)
   yield takeEvery(SIGN_OUT, signOutSaga)
 }
 
 const initialState = {
   token: null,
-  user: null,
 }
 
-const authReducer = (state = initialState, action) => {
+const userReducer = (state = initialState, action) => {
   console.log(action)
   switch (action.type) {
     case SIGN_IN_SUCCESS:
+      return {
+        ...state,
+        token: action.payload.token,
+        user: {
+          ...state.user,
+          email: action.payload.email,
+        },
+      }
+    case SIGN_UP_SUCCESS:
       return {
         ...state,
         token: action.payload.token,
@@ -75,4 +102,4 @@ const authReducer = (state = initialState, action) => {
   }
 }
 
-export default authReducer
+export default userReducer

@@ -3,16 +3,22 @@ import styles from './index.module.scss'
 import cx from 'classnames'
 import Link from 'next/link'
 
-export default function SignIn({ inputs, onChange, onSubmit }) {
+export default function SignUp({ inputs, onChange, onSubmit }) {
   return (
     <div>
-      <div>signin</div>
+      <div>signup</div>
       <form onSubmit={onSubmit}>
         <input
           name="email"
           value={inputs.email}
           onChange={onChange}
           type="email"
+        />
+        <input
+          name="nickname"
+          value={inputs.nickname}
+          onChange={onChange}
+          type="text"
         />
         <input
           name="password"
