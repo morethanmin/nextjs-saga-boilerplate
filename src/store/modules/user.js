@@ -69,11 +69,13 @@ export function* userSaga() {
 }
 
 const initialState = {
-  token: null,
+  loading: null,
+  user: null,
+  error: null,
 }
 
 const userReducer = (state = initialState, action) => {
-  console.log(action)
+  // console.log(action)
   switch (action.type) {
     case SIGN_IN_SUCCESS:
       return {

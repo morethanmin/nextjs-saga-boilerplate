@@ -1,17 +1,8 @@
-import { Provider } from 'react-redux'
-import store from 'store/index'
-
-import LayoutContainer from 'containers/Layout'
 import 'styles/globals.scss'
+import wrapper from 'store'
 
 function Until({ Component, pageProps }) {
-  return (
-    <Provider store={store}>
-      <LayoutContainer>
-        <Component {...pageProps} />
-      </LayoutContainer>
-    </Provider>
-  )
+  return <Component {...pageProps} />
 }
 
-export default Until
+export default wrapper.withRedux(Until)
