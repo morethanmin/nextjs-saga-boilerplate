@@ -20,6 +20,6 @@ export const signOut = async (data) => {
 }
 
 //로그인 상태 불러오기
-export const loadUser = async (data) => {
-  return axios.get('/user', data)
+export const loadUser = async () => {
+  return await axios.get('/user')
 }

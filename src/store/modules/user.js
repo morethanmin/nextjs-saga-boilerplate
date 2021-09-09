@@ -8,6 +8,10 @@ import {
   takeLeading,
 } from '@redux-saga/core/effects'
 
+const LOAD_USER = 'user/LOAD_USER'
+const LOAD_USER_SUCCESS = 'user/LOAD_USER_SUCCESS'
+const LOAD_USER_ERROR = 'user/LOAD_USER_ERROR'
+
 const SIGN_IN = 'user/SIGN_IN'
 const SIGN_IN_SUCCESS = 'user/SIGN_IN_SUCCESS'
 const SIGN_IN_ERROR = 'user/SIGN_IN_ERROR'
@@ -20,6 +24,11 @@ const SIGN_OUT = 'user/SIGN_OUT'
 const SIGN_OUT_SUCCESS = 'user/SIGN_OUT_SUCCESS'
 const SIGN_OUT_ERROR = 'user/SIGN_OUT_ERROR'
 
+export const loadUser = (payload, successCallback = () => {}) => ({
+  type: LOAD_USER,
+  payload,
+  successCallback,
+})
 export const signIn = (payload, successCallback = () => {}) => ({
   type: SIGN_IN,
   payload,
@@ -35,6 +44,16 @@ export const signOut = (successCallback) => ({
   successCallback,
 })
 
+const loadUserSaga = function* (action) {
+  try {
+    const payload = yield call(userAPI.loadUser, action.payload)
+    yield put({ type: LOAD_USER_SUCCESS, payload: payload.data })
+    yield call(action.successCallback)
+  } catch (error) {
+    yield put({ type: LOAD_USER_ERROR, payload: error.response.data })
+  }
+}
+
 const signInSaga = function* (action) {
   try {
     const payload = yield call(userAPI.signIn, action.payload)
@@ -44,6 +63,7 @@ const signInSaga = function* (action) {
     yield put({ type: SIGN_IN_ERROR, payload: error })
   }
 }
+
 const signUpSaga = function* (action) {
   try {
     const payload = yield call(userAPI.signUp, action.payload)
@@ -53,6 +73,7 @@ const signUpSaga = function* (action) {
     yield put({ type: SIGN_UP_ERROR, payload: error })
   }
 }
+
 const signOutSaga = function* (action) {
   try {
     yield put({ type: SIGN_OUT_SUCCESS })
@@ -63,6 +84,7 @@ const signOutSaga = function* (action) {
 }
 
 export function* userSaga() {
+  yield takeEvery(LOAD_USER, loadUserSaga)
   yield takeEvery(SIGN_IN, signInSaga)
   yield takeEvery(SIGN_UP, signUpSaga)
   yield takeEvery(SIGN_OUT, signOutSaga)
@@ -75,12 +97,26 @@ const initialState = {
 }
 
 const userReducer = (state = initialState, action) => {
-  // console.log(action)
+  console.log(action)
   switch (action.type) {
+    case LOAD_USER_SUCCESS:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
+        },
+      }
+    case LOAD_USER_ERROR:
+      console.log(action.payload)
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      }
     case SIGN_IN_SUCCESS:
       return {
         ...state,
-        token: action.payload.token,
         user: {
           ...state.user,
           email: action.payload.email,
@@ -89,7 +125,6 @@ const userReducer = (state = initialState, action) => {
     case SIGN_UP_SUCCESS:
       return {
         ...state,
-        token: action.payload.token,
         user: {
           ...state.user,
           email: action.payload.email,

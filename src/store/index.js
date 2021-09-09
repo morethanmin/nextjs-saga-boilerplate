@@ -9,7 +9,9 @@ const makeStore = (initialState, options) => {
   const middlewares = [sagaMiddleware]
   const enhancer = composeWithDevTools(applyMiddleware(...middlewares))
   const store = createStore(rootReducer, enhancer)
-  sagaMiddleware.run(rootSaga)
+  store.sagaTask = sagaMiddleware.run(rootSaga)
+
+  // sagaMiddleware.run(rootSaga)
 
   return store
 }

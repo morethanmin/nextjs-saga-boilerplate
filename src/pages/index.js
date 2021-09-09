@@ -1,10 +1,11 @@
+import { END } from '@redux-saga/core'
 import axios from 'axios'
 import HomeContainer from 'containers/Home'
 import LayoutContainer from 'containers/Layout'
-import { useDispatch } from 'react-redux'
 import wrapper from 'store'
+import { loadUser } from 'store/modules/user'
 
-function Home(props) {
+function Home() {
   return (
     <LayoutContainer>
       <HomeContainer />
@@ -27,7 +28,9 @@ export const getServerSideProps = wrapper.getServerSideProps(
       if (req && cookie) {
         axios.defaults.headers.Cookie = cookie
       }
-      // await dispatch(loadUser())
+      store.dispatch(loadUser())
+      store.dispatch(END)
+      await store.sagaTask.toPromise()
     }
 )
 
