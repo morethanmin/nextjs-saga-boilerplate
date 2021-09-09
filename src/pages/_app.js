@@ -1,8 +1,8 @@
 import 'styles/globals.scss'
 import wrapper from 'store'
 
-function Until({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   return <Component {...pageProps} />
 }
 
-export default wrapper.withRedux(Until)
+export default wrapper.withRedux(App)

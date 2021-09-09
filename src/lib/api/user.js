@@ -15,8 +15,8 @@ export const signIn = async (data) => {
 }
 
 //로그아웃
-export const signOut = async (data) => {
-  return await axios.post('/signup', data)
+export const signOut = async () => {
+  return await axios.post('/signout')
 }
 
 //로그인 상태 불러오기

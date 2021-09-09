@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 import cx from 'classnames'
 import Link from 'next/link'
 
-export default function Layout({ children }) {
+export default function Layout({ user, handleSignout, children }) {
   return (
     <div className={cx(styles.wrapper)}>
       <header className={cx(styles.headerWrapper, 'container')}>
@@ -13,8 +13,17 @@ export default function Layout({ children }) {
           </div>
           <div></div>
           <div>
-            <Link href="/signin">sign in</Link>
-            <Link href="/signup">sign up</Link>
+            {user.data ? (
+              <>
+                <div>{user.data.nick}</div>
+                <button onClick={handleSignout}>sign out</button>
+              </>
+            ) : (
+              <>
+                <Link href="/signin">sign in</Link>
+                <Link href="/signup">sign up</Link>
+              </>
+            )}
           </div>
         </div>
       </header>

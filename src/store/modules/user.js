@@ -39,7 +39,7 @@ export const signUp = (payload, successCallback = () => {}) => ({
   payload,
   successCallback,
 })
-export const signOut = (successCallback) => ({
+export const signOut = (successCallback = () => {}) => ({
   type: SIGN_OUT,
   successCallback,
 })
@@ -50,7 +50,8 @@ const loadUserSaga = function* (action) {
     yield put({ type: LOAD_USER_SUCCESS, payload: payload.data })
     yield call(action.successCallback)
   } catch (error) {
-    yield put({ type: LOAD_USER_ERROR, payload: error.response.data })
+    console.log('message', error.message)
+    yield put({ type: LOAD_USER_ERROR, payload: error.message })
   }
 }
 
@@ -67,7 +68,7 @@ const signInSaga = function* (action) {
 const signUpSaga = function* (action) {
   try {
     const payload = yield call(userAPI.signUp, action.payload)
-    yield put({ type: SIGN_UP_SUCCESS, payload })
+    yield put({ type: SIGN_UP_SUCCESS, payload: payload.data })
     yield call(action.successCallback)
   } catch (error) {
     yield put({ type: SIGN_UP_ERROR, payload: error })
@@ -76,7 +77,8 @@ const signUpSaga = function* (action) {
 
 const signOutSaga = function* (action) {
   try {
-    yield put({ type: SIGN_OUT_SUCCESS })
+    const payload = yield call(userAPI.signOut, action.payload)
+    yield put({ type: SIGN_OUT_SUCCESS, payload })
     yield call(action.successCallback)
   } catch (error) {
     yield put({ type: SIGN_OUT_ERROR, payload: error })
@@ -92,18 +94,26 @@ export function* userSaga() {
 
 const initialState = {
   loading: null,
-  user: null,
+  data: null,
   error: null,
 }
 
 const userReducer = (state = initialState, action) => {
   console.log(action)
   switch (action.type) {
+    case LOAD_USER:
+    case SIGN_IN:
+    case SIGN_UP:
+    case SIGN_OUT:
+      return {
+        ...state,
+        loading: true,
+      }
     case LOAD_USER_SUCCESS:
       return {
         ...state,
-        user: {
-          ...state.user,
+        data: {
+          ...state.data,
           ...action.payload,
         },
       }
@@ -117,17 +127,15 @@ const userReducer = (state = initialState, action) => {
     case SIGN_IN_SUCCESS:
       return {
         ...state,
-        user: {
-          ...state.user,
-          email: action.payload.email,
+        data: {
+          ...state.data,
         },
       }
     case SIGN_UP_SUCCESS:
       return {
         ...state,
-        user: {
-          ...state.user,
-          email: action.payload.email,
+        data: {
+          ...state.data,
         },
       }
     case SIGN_OUT_SUCCESS:
