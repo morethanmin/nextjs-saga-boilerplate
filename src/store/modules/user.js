@@ -50,7 +50,6 @@ const loadUserSaga = function* (action) {
     yield put({ type: LOAD_USER_SUCCESS, payload: payload.data })
     yield call(action.successCallback)
   } catch (error) {
-    console.log('message', error.message)
     yield put({ type: LOAD_USER_ERROR, payload: error.message })
   }
 }
@@ -58,7 +57,7 @@ const loadUserSaga = function* (action) {
 const signInSaga = function* (action) {
   try {
     const payload = yield call(userAPI.signIn, action.payload)
-    yield put({ type: SIGN_IN_SUCCESS, payload })
+    yield put({ type: SIGN_IN_SUCCESS, payload: payload.data })
     yield call(action.successCallback)
   } catch (error) {
     yield put({ type: SIGN_IN_ERROR, payload: error })
@@ -99,7 +98,6 @@ const initialState = {
 }
 
 const userReducer = (state = initialState, action) => {
-  console.log(action)
   switch (action.type) {
     case LOAD_USER:
     case SIGN_IN:
@@ -118,7 +116,6 @@ const userReducer = (state = initialState, action) => {
         },
       }
     case LOAD_USER_ERROR:
-      console.log(action.payload)
       return {
         ...state,
         error: action.payload,
@@ -129,6 +126,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         data: {
           ...state.data,
+          ...action.payload,
         },
       }
     case SIGN_UP_SUCCESS:

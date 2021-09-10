@@ -1,10 +1,10 @@
 import Layout from 'components/_base/Layout'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { signOut } from 'store/modules/user'
+import { loadUser, signOut } from 'store/modules/user'
 
-export default function LayoutContainer({ children }) {
+function LayoutContainer({ children }) {
   const dispatch = useDispatch()
   const user = useSelector((state) => state.user)
 
@@ -17,3 +17,5 @@ export default function LayoutContainer({ children }) {
     </Layout>
   )
 }
+
+export default LayoutContainer

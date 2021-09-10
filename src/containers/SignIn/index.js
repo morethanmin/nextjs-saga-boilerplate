@@ -2,18 +2,24 @@ import SignIn from 'components/SignIn'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import * as authActions from 'store/modules/user'
+import { useRouter } from 'next/router'
 
 export default function SignInContainer() {
   const dispatch = useDispatch()
+  const router = useRouter()
   const user = useSelector((state) => state.user)
   const [inputs, setInputs] = useState({
     email: '',
     password: '',
   })
-  useEffect(() => {}, [])
+
   const onSubmit = (e) => {
     e.preventDefault()
-    dispatch(authActions.signIn({ ...inputs }))
+    dispatch(
+      authActions.signIn({ ...inputs }, () => {
+        router.push('/')
+      })
+    )
   }
   const onChange = (e) => {
     const { name, value } = e.target
